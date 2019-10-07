@@ -1,10 +1,16 @@
 # LimitKit
 
-LimitKit brings rate limiting and throttling to Shortcuts. It allows shortcuts that are run automatically via Personal Automations in iOS 13 to control how frequently they can run their primary function. 
+LimitKit provides a simple rate limiting and throttling service for shortcuts. Shortcuts can call LimitKit to learn two things:
 
-Suppose you have a shortcut that you want to run once every five minutes. You can use LimitKit to prevent the shortcut from fully running if it was called at the three minute mark. LimitKit will tell you when five minutes or more minutes have passed, at which point the shortcut can run its main routine. 
+1. When was the last time the shortcut ran. 
+2. Whether or not a set amount of time has elapsed since the last call to the shortcut. 
 
-LimitKit is especially useful when paired with [Autocuts](https://tow.com/Shortcuts/autocuts), the shortcut for automatically running your shortcuts while you use your iOS device. 
+> LimitKit works especially well with [Autocuts](#autocuts), a solution for running shortcuts automatically in the background for iOS 13. 
+
+## Example 1: Low Power Mode
+Suppose you have a shortcut that activates Low Power Mode when the battery level reaches a certain percentage. You create an Autocut that runs periodically in the background while you use your device during the day. 
+
+you want to run at most once every five minutes. You can use LimitKit to prevent the shortcut from fully running if it was called at the three minute mark. After five or more minutes have passed, LimitKit will tell the shortcut that it's okay to run its main routine. 
 
 Want to have a shortcut that checks your battery every five minutes? It's easy to do with LimitKit, Autocuts, and Personal Automations. 
 
