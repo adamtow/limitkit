@@ -1,1 +1,13 @@
-
+{
+	"English": {
+		"alert_about": "A tool for tracking the last time a shortcut ran and rate limiting shortcut operation.",
+		"menu_about": "About LimitKit…",
+		"menu_help": "Help…",
+		"menu_quit": "Quit",
+		"menu_update": "Check for Updates…",
+		"menu_update_now": "Update Now…",
+		"menu_update_later": "Update Later",
+		"prompt_update": "LimitKit {{version}} is available. Would you like to download it now?\n\nRelease Notes\n{{notes}}",
+		"alert_update_none": "You are running the latest version of LimitKit."
+	}
+}
