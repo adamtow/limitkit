@@ -5,11 +5,13 @@ LimitKit provides a simple rate limiting and throttling service for shortcuts. S
 1. When was the last time the shortcut ran. 
 2. Whether or not a set amount of time has elapsed since the last call to the shortcut. 
 
-> LimitKit works especially well with [Autocuts](#autocuts), a solution for running shortcuts automatically in the background for iOS 13. 
+LimitKit works especially well with shortcuts used with [Autocuts](#autocuts), a solution for running shortcuts automatically in the background for iOS 13. 
 
 ## Usage
 
-Call the LimitKit shortcut with a dictionary contains the following variables. Items in bold below are required. 
+Call the LimitKit shortcut with either a string or a dictionary contains the following variables. Items in bold below are required. 
+
+### Dictionary
 
 - **key**: typically the  name of your shortcut, but it can be any string that uniquely identifies the operation you want to rate limit. 
 - **interval**: the number seconds, minutes, hours, weeks, months, or years to wait. 
@@ -20,8 +22,15 @@ Call the LimitKit shortcut with a dictionary contains the following variables. I
 		- w (weeks)
 		- mo (months)
 		- y (years)
-- **update**: set this to 1 to update the last used timestamp in LimitKit for the given key. This is only updated if the shortcut key passed LimitKit's test.
-- **delete**: set this to 1 to delete the key's record from LimitKit. 
+- update: set this to 1 to update the last used timestamp in LimitKit for the given key. This is only updated if the shortcut key passed LimitKit's test.
+- delete: set this to 1 to delete the key's record from LimitKit. 
+
+### String
+
+Sending a string to LimitKit will ignore any time check and set the current time as the new last run time for the key. LimitKit will return a dictionary containing:
+
+- lastRun: when LimitKit was last run with the given key.
+- count: the number of times LimitKit has been called for the given key.
 
 ## Example 1: Low Power Mode
 Suppose you have a shortcut that activates Low Power Mode when the battery level reaches a certain percentage. You create an Autocut that runs periodically in the background while you use your device during the day. 
