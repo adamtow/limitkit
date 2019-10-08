@@ -7,18 +7,11 @@ LimitKit provides a simple rate limiting and throttling service for shortcuts. S
 
 > LimitKit works especially well with [Autocuts](#autocuts), a solution for running shortcuts automatically in the background for iOS 13. 
 
-## Example 1: Low Power Mode
-Suppose you have a shortcut that activates Low Power Mode when the battery level reaches a certain percentage. You create an Autocut that runs periodically in the background while you use your device during the day. 
-
-you want to run at most once every five minutes. You can use LimitKit to prevent the shortcut from fully running if it was called at the three minute mark. After five or more minutes have passed, LimitKit will tell the shortcut that it's okay to run its main routine. 
-
-Want to have a shortcut that checks your battery every five minutes? It's easy to do with LimitKit, Autocuts, and Personal Automations. 
-
 ## Usage
 
 Call the LimitKit shortcut with a dictionary contains the following variables. Items in bold below are required. 
 
-- **shortcut**: the name of your shortcut. 
+- **key**: typically the  name of your shortcut, but it can be any string that uniquely identifies the operation you want to rate limit. 
 - **interval**: the number seconds, minutes, hours, weeks, months, or years to wait. 
 - **unit**:
 		- s (seconds)
@@ -27,25 +20,38 @@ Call the LimitKit shortcut with a dictionary contains the following variables. I
 		- w (weeks)
 		- mo (months)
 		- y (years)
-- update: set this to 1 to update the shortcut's last used timestamp in LimitKit. This is only updated if the shortcut passed LimitKit's test. 
+- **update**: set this to 1 to update the last used timestamp in LimitKit for the given key. This is only updated if the shortcut key passed LimitKit's test.
+- **delete**: set this to 1 to delete the key's record from LimitKit. 
 
-## Examples
+## Example 1: Low Power Mode
+Suppose you have a shortcut that activates Low Power Mode when the battery level reaches a certain percentage. You create an Autocut that runs periodically in the background while you use your device during the day. 
 
-Sending the following dictionary to:
+you want to run at most once every five minutes. You can use LimitKit to prevent the shortcut from fully running if it was called at the three minute mark. After five or more minutes have passed, LimitKit will tell the shortcut that it's okay to run its main routine. 
+
+Want to have a shortcut that checks your battery every five minutes? It's easy to do with LimitKit, Autocuts, and Personal Automations. 
+
+## Example 1: QA: LimitKit Test
+
+Consider the [QA: LimitKit Test](https://www.icloud.com/shortcuts/f1b53984116345b78911d8b93be34132) shortcut. It is set to run its primary function every minute. It sends the following dictionary to LimitKit which returns 0 of it failed the time limit check or 1 if it passed:
 
 ```
 {
-	"shortcut": "Low Power Mode",
-	"interval": 5,
-	"unit": "m",
-	"update": 1
+	"key": "LimitKit Test",
+	"interval": 60,
+	"unit": "s",
+	"update": 1,
+	"delete": 0
 }
 ```
 
-LimitKit will check first if it has an entry for "Low Power Mode" in its records. If not, it will return 1 to your shortcut and mark the time. 
+![Test Shortcut with LimitKit support](https://adamtow.github.io/limitkit/images/limitkit-test.png)
 
-The next time you call LimitKit with the same information, it will compare the current time with the last time LimitKit was asked to check on the "Low Power Mode" key. 
+LimitKit will check first if it has an entry for "LimitKit" in its records. If not, it will return 1 to your shortcut and mark the time. 
 
-If at least 5 minutes have passed, LimitKit will return 1. Otherwiss, a 0 is returned. 
+Now run the shortcut again before a minuteras passed. It will exit because it failed LimitKit's time check. If you wait for the minute to pass and run the shortcut again, it will return 1. 
 
-With this knowledge, the Low Power Mode shortcut can exit without running the rest of its actions. While the actions skipped are relatively small, you can see how this can be useful if you have a very complicated shortcut. Shortcuts that use location or retrieve large amounts of data from remote servers can benefit by incorporating LimitKit. 
+## Example 2: Low Power Mode
+
+The [Low Power Mode shortcut](https://www.icloud.com/shortcuts/86a571aab5334fa590be833d8f03f55b) is used with Autocuts to automatically turn on Low Power Mode when your battery reaches a certain percentage. By default it performs the check once every five minutes thanks to its integration with LimitKit. 
+
+## Example 3: Location Triggers
