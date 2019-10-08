@@ -1,9 +1,9 @@
 # LimitKit
 
-LimitKit provides a simple rate limiting and throttling service for shortcuts. Shortcuts can call LimitKit to learn two things:
+LimitKit provides a simple rate limiting and throttling service for shortcuts. Shortcut developers can use LimitKit to:
 
-1. When was the last time the shortcut ran. 
-2. Whether or not a set amount of time has elapsed since the last call to the shortcut. 
+1. Track when the last time the shortcut ran a certain operation.
+2. Calculate whether a set amount of time has elapsed since the last successful call to LimitKit. 
 
 LimitKit works especially well with shortcuts used with [Autocuts](#autocuts), a solution for running shortcuts automatically in the background for iOS 13. 
 
@@ -88,4 +88,4 @@ Location Triggers has a UI for activating LimitKit integration and for setting t
 
 ## Application Interface
 
-When LimitKit is launched with no parameters, 
+When LimitKit is launched with no parameters, it displays a 
