@@ -32,16 +32,14 @@ Sending a string to LimitKit will ignore any time check and set the current time
 - lastRun: when LimitKit was last run with the given key.
 - count: the number of times LimitKit has been called for the given key.
 
-## Example 1: Low Power Mode
-Suppose you have a shortcut that activates Low Power Mode when the battery level reaches a certain percentage. You create an Autocut that runs periodically in the background while you use your device during the day. 
+****
 
-you want to run at most once every five minutes. You can use LimitKit to prevent the shortcut from fully running if it was called at the three minute mark. After five or more minutes have passed, LimitKit will tell the shortcut that it's okay to run its main routine. 
+## Examples
+This section shows three shortcuts that utilize LimitKit:
 
-Want to have a shortcut that checks your battery every five minutes? It's easy to do with LimitKit, Autocuts, and Personal Automations. 
+### Example 2: QA: LimitKit Test
 
-## Example 1: QA: LimitKit Test
-
-Consider the [QA: LimitKit Test](https://www.icloud.com/shortcuts/f1b53984116345b78911d8b93be34132) shortcut. It is set to run its primary function every minute. It sends the following dictionary to LimitKit which returns 0 of it failed the time limit check or 1 if it passed:
+Consider the [LimitKit Test](https://www.icloud.com/shortcuts/6555a25b14d94f28a7aea06a9be91eb0) shortcut. It sends the following dictionary to LimitKit which returns 0 if the call was made in the last 60 seconds of a successful call. After 60 seconds have elapsed, LimitKit will return 1 and start the countdown again.
 
 ```
 {
@@ -49,18 +47,45 @@ Consider the [QA: LimitKit Test](https://www.icloud.com/shortcuts/f1b53984116345
 	"interval": 60,
 	"unit": "s",
 	"update": 1,
-	"delete": 0
 }
 ```
 
 ![Test Shortcut with LimitKit support](https://adamtow.github.io/limitkit/images/limitkit-test.png)
 
-LimitKit will check first if it has an entry for "LimitKit" in its records. If not, it will return 1 to your shortcut and mark the time. 
+LimitKit will check first if it has an entry for "LimitKit Test" in its records. If not, it will create a new record, mark the current time, and return 1 to your shortcut. 
 
-Now run the shortcut again before a minuteras passed. It will exit because it failed LimitKit's time check. If you wait for the minute to pass and run the shortcut again, it will return 1. 
+Now run the shortcut again before 60 seconds have passed. LimitKit will now return a 0 since it failed the time interval check. If you run the shortcut again  after 60 seconds, it will work as expected.
 
-## Example 2: Low Power Mode
+### Example 2: Auto Low Power Mode
 
-The [Low Power Mode shortcut](https://www.icloud.com/shortcuts/86a571aab5334fa590be833d8f03f55b) is used with Autocuts to automatically turn on Low Power Mode when your battery reaches a certain percentage. By default it performs the check once every five minutes thanks to its integration with LimitKit. 
+The [Auto Low Power Mode shortcut](https://www.icloud.com/shortcuts/3af0ea02f13a4f6bbb851b2fe97d644a) is used with Autocuts to automatically turn on Low Power Mode when your battery reaches a certain percentage. By default it performs the check once every five minutes thanks to its integration with LimitKit.
 
-## Example 3: Location Triggers
+{
+	"key": "Auto Low Power Mode",
+	"interval": 5,
+	"unit": "m",
+	"update: 1
+}
+
+In Autocuts Admin, I created a new Autocut with the following properties:
+
+- shortcut: Auto Low Power Mode
+- expires: -1
+- device: the name of my device
+- activate: 0
+
+Autocuts is configured to run every time I open my most frequently used apps, such as Mail, Safari, Notes, and Messages, but it only runs Autocuts every one minute due to its own integration with LimitKit. Every 5 minutes, the Auto Low Power Mode shortcut will run and evaluate my current battery level. 
+
+### Example 3: Location Triggers
+
+A more advance use of LimitKit comes in the form of the Location Triggers shortcut. In conjunction with Autocuts, Location Triggers runs shortcuts automatically in the background based on your current location while you use your iOS device.
+
+Because retrieving the user's current location can be a time-consuming and battery hogging operation, LimitKit is used to restrict location checks every 5-10 minutes. If I need
+
+![Location Triggers with LimitKit support](https://adamtow.github.io/limitkit/images/location-triggers-limitkit.png)
+
+Location Triggers has a UI for activating LimitKit integration and for setting the interval value. 
+
+## Application Interface
+
+When LimitKit is launched with no parameters, 
