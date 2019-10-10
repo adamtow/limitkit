@@ -5,12 +5,19 @@ LimitKit is an event logging system and rate limiting tool for shortcuts. Shortc
 1. Track and log events made in their shortcuts.
 2. Rate limit shortcut operations by calculating whether a set amount of time has elapsed since the last successful log event.
 
+![LimitKit](https://adamtow.github.io/limitkit/images/limitkit.png)
+
 Check out the example shortcuts below that all employ LimitKit:
 
 - **[LimitKit Test](#limitkit-test)**: A simple shortcut demonstrating LimitKit's rate limiting abilities.
 - **[Auto Low Power](#auto-low-power)**: A shortcut that works with Autocuts to activate Low Power Mode automatically when your battery falls to a certain percentage.
-- **[Auto DND](#auto-dnd)**: A shortcut that works with Autocuts to activate Do Not Disturb mode whenever a calendar event has DND in its title or notes field.
+- **[Auto DND](#auto-dnd)**: A shortcut that works with Autocuts to activate Do Not Disturb mode whenever a calendar event has the string "DND" in its title or notes field.
 - **[Location Triggers](#location-triggers)**: A shortcut that runs shortcuts automatically based on your current location.
+
+## Download
+The latest version of LimitKit can be found on RoutineHub:
+
+- [**Download LimitKit on RoutineHub**](https://routinehub.co/shortcut/3603)
 
 ## Autocuts
 
@@ -22,15 +29,15 @@ Developers call the LimitKit shortcut with either a string or a dictionary conta
 
 ### String
 
-Sending a string to LimitKit will perform a `track` command request for the given key. LimitKit will return a dictionary containing:
+Sending a string to LimitKit will perform a `track` command request for the given event name. LimitKit will return a dictionary containing:
 
 - event: the name of the event to be tracked.
 - date: the last time the track request was made.
-- count: the number of times LimitKit has been called for the given key.
+- count: the number of times LimitKit has been called for the given event name.
 
 ### Dictionary
 
-- `**event**`: the name of the event to be tracked.
+- `event`: the name of the event to be tracked.
 - command: what type of request to make to LimitKit. Possible values include:
 	- `value`: return the entry object but perform no track or verify request.
 	- `track`: update the entry and return an object containing the last run date and the number of times the entry has been tracked.
@@ -64,7 +71,7 @@ You can store a string of text with your `track` and `update` calls. LimitKit **
 ****
 
 ## Examples
-This section shows three shortcuts that utilize LimitKit:
+This section shows four shortcuts that utilize LimitKit:
 
 <span id="#limitkit-test"></span>
 ### Example 2: LimitKit Test
@@ -105,12 +112,16 @@ Autocuts is configured to run every time the user opens his or her most frequent
 
 > Autocuts itself can be configured to use LimitKit. To prevent unnecessary calls when switching quickly between apps, consider setting an interval of one minute or greater within Autocuts Admin for Autocuts.
 
+![Setting a check frequency for Autocuts](https://adamtow.github.io/limitkit/images/autocuts-limitkit.png)
+
 <span id="#auto-dnd"></span>
 ### Example 3: Auto DND
 
 The [Auto DND]() shortcut works with Autocuts to automatically toggle Do Not Disturb mode when the current time coincides with calendar events whose title or notes field has the string "DND".
 
 The shortcut uses Get Calendar Events, which can take a variable amount of time depending on how many events are on the device's calendar. LimitKit can be used to check the calendars every 5 minutes instead of every time Autocuts runs.
+
+![Auto DND setting Do Not Disturb automatically](https://adamtow.github.io/auto-dnd/images/auto-dnd-in-action.png)
 
 <span id="#location-triggers"></span>
 ### Example 4: Location Triggers
@@ -129,15 +140,49 @@ This interval value is fully configurable by the user by going to the Settings p
 ## Application Interface
 
 When LimitKit is launched with no parameters, it displays a menu with the following commands:
-- View Limit Entries: Displays all the keys recorded by LimitKit.
-- Delete Limit Entries: Clears the LimitKit database of all records.
-- About LimitKit: Displays about information, include the current version and build number.
-- Help: Displays the page you are reading now.
-- Check for Updates: Checks RoutineHub.co if there is a newer version of LimitKit available.
-- Quit: Exits the shortcut.
 
-Tapping **View Limit Entries** along with a key will show you the same information if you called LimitKit with the `value` command.
+- **Request Assistant**: A step-by-step wizard for creating a request to LimitKit. 
+- **New Raw Request**: Expert users can send a raw request by modifying a dictionary object and sending it to LimitKit.
+- **View Events**: Displays all the events recorded by LimitKit.
+- **Delete All Events**: Clears the LimitKit database of all records.
+- **About LimitKit**: Displays about information, include the current version and build number.
+- **Help**: Displays the page you are reading now.
+- **Check for Updates**: Checks RoutineHub.co if there is a [newer version of LimitKit](https://routinehub.co/shortcut/3603) available.
 
-![Viewing a LimitKit Entry](https://adamtow.github.io/limitkit/images/limitkit-view-entry.png)
+Tapping **View Events** along with a event name will show you the same information if you called LimitKit with the `value` command.
+
+![Viewing a LimitKit Entry](https://adamtow.github.io/limitkit/images/limitkit-view-entries.png)
 
 **NOTE:** *Editing the values and tapping Done does not save the changes back to the LimitKit entry.*
+
+## Sending Requests to LimitKit
+There are two ways you can send a request to LimitKit from the LimitKit shortcut itself.
+
+### Request Assistant
+Tap on Request Assistant from the LimitKit Home screen to experience a step-by-step guide for creating a LimitKit request. Here's an example of using the Request Assistant to make a track call.
+
+1. Tap **Request Assistant**.
+2. Enter `My Event Name`.
+3. Tap **Track**.
+
+The call will be made and the event object will be returned to the user. The date in the event object will be the date when the event was processed by LimitKit.
+
+![Sending a track request using the Request Assistant](https://adamtow.github.io/limitkit/images/limitkit-request-assistant-track.png)
+
+To make an update call, perform the following steps:
+
+1. Tap **Request Assistant**.
+2. Enter `My Event Name`
+3. Tap **Test**.
+4. Enter the interval value.
+5. Enter the unit.
+6. Tap **Update** if you want the entry updated after a successful evaluation. Tap **Test** if you just want to know if the interval and unit are valid.
+7. The response of 0 or 1 is return by LimitKit.
+
+![Creating an update request to LimitKit](https://adamtow.github.io/limitkit/images/limitkit-request-assistant-update.png)
+
+![Sending a successful update request to LimitKit](https://adamtow.github.io/limitkit/images/limitkit-request-assistant-update-success.png)
+
+### Raw Request
+
+![Sending a raw request to LimitKit](https://adamtow.github.io/limitkit/images/limitkit-raw-request.png)
